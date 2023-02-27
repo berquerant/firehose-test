@@ -16,7 +16,7 @@ import (
 	healthpb "google.golang.org/grpc/health/grpc_health_v1"
 )
 
-//go:generate go run github.com/berquerant/goconfig@latest -type "Executable string,Port int,HealthWait time.Duration" -option -configOption Option -output grpc_config_generated.go
+//go:generate go run github.com/berquerant/goconfig@v0.1.0 -field "Executable string|Port int|HealthWait time.Duration" -option -configOption Option -output grpc_config_generated.go
 
 type Runner struct {
 	Dir        *tempdir.Dir
@@ -84,7 +84,7 @@ func (r *Runner) Init(ctx context.Context) error {
 		grpc.WithTransportCredentials(insecure.NewCredentials()),
 	)
 	if err != nil {
-		return fmt.Errorf("Failed to crate conn: %w", err)
+		return fmt.Errorf("Failed to create conn: %w", err)
 	}
 	r.Conn = conn
 	return nil
