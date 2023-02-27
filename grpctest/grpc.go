@@ -36,7 +36,7 @@ func NewRunner(dir *tempdir.Dir, opt ...Option) *Runner {
 	conf := NewConfigBuilder().
 		Executable("server").
 		Port(17001).
-		HealthWait(3 * time.Second).
+		HealthWait(time.Second).
 		Build()
 	conf.Apply(opt...)
 
