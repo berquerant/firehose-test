@@ -59,7 +59,7 @@ func (r *Runner) Init(ctx context.Context) error {
 	// expect that test code is in the same dir as the target
 	executable := r.Dir.Join(r.Conf.Executable.Get())
 	if err := command.New("go", "build", "-o", executable).Run(); err != nil {
-		return fmt.Errorf("Failed to build %s: %w",
+		return fmt.Errorf("failed to build %s: %w",
 			r.Conf.Executable.Get(),
 			err,
 		)
@@ -69,14 +69,14 @@ func (r *Runner) Init(ctx context.Context) error {
 	// start grpc server
 	runCommand := command.New(executable)
 	if err := runCommand.Start(); err != nil {
-		return fmt.Errorf("Failed to start server: %w", err)
+		return fmt.Errorf("failed to start server: %w", err)
 	}
 	r.RunCommand = runCommand
 	// check server is ready
 	healthCtx, cancel := context.WithTimeout(ctx, r.Conf.HealthWait.Get())
 	defer cancel()
 	if err := WaitServerReady(healthCtx, r.Conf.Port.Get()); err != nil {
-		return fmt.Errorf("Server is not ready: %w", err)
+		return fmt.Errorf("ferver is not ready: %w", err)
 	}
 	// create conn
 	conn, err := grpc.Dial(
@@ -84,7 +84,7 @@ func (r *Runner) Init(ctx context.Context) error {
 		grpc.WithTransportCredentials(insecure.NewCredentials()),
 	)
 	if err != nil {
-		return fmt.Errorf("Failed to create conn: %w", err)
+		return fmt.Errorf("failed to create conn: %w", err)
 	}
 	r.Conn = conn
 	return nil
@@ -100,16 +100,16 @@ func (r *Runner) Init(ctx context.Context) error {
 func (r *Runner) Close() error {
 	if r.Conn != nil {
 		if err := r.Conn.Close(); err != nil {
-			return fmt.Errorf("Failed to close conn: %w", err)
+			return fmt.Errorf("failed to close conn: %w", err)
 		}
 	}
 	if r.RunCommand != nil {
 		// grpc server of firehose gracefully stop when interrupted
 		if err := r.RunCommand.Process.Signal(os.Interrupt); err != nil {
-			return fmt.Errorf("Failed to interrupt %s: %w", r.Conf.Executable.Get(), err)
+			return fmt.Errorf("failed to interrupt %s: %w", r.Conf.Executable.Get(), err)
 		}
 		if err := r.RunCommand.Wait(); err != nil {
-			return fmt.Errorf("Failed to close %s: %w", r.Conf.Executable.Get(), err)
+			return fmt.Errorf("failed to close %s: %w", r.Conf.Executable.Get(), err)
 		}
 	}
 	return nil
