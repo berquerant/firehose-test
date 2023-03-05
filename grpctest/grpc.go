@@ -29,9 +29,9 @@ type Runner struct {
 //
 // Options:
 //
-// - WithExecutable: executable name to be built (default: server)
-// - WithHealthWait: wait time for health check (default: 1s)
-// - WithPort: port number that the server listens on (default: 17001)
+//   - WithExecutable: executable name to be built (default: server)
+//   - WithHealthWait: wait time for health check (default: 1s)
+//   - WithPort: port number that the server listens on (default: 17001)
 func NewRunner(dir *tempdir.Dir, opt ...Option) *Runner {
 	conf := NewConfigBuilder().
 		Executable("server").
@@ -50,11 +50,11 @@ func NewRunner(dir *tempdir.Dir, opt ...Option) *Runner {
 //
 // Init does the following:
 //
-// 1. Build a executable of grpc server
-// 2. Set PORT env var
-// 3. Start the server
-// 4. Wait the server is ready
-// 5. Create a connection to server
+//  1. Build a executable of grpc server
+//  2. Set PORT env var
+//  3. Start the server
+//  4. Wait the server is ready
+//  5. Create a connection to server
 func (r *Runner) Init(ctx context.Context) error {
 	// expect that test code is in the same dir as the target
 	executable := r.Dir.Join(r.Conf.Executable.Get())
@@ -94,9 +94,9 @@ func (r *Runner) Init(ctx context.Context) error {
 //
 // Close does the following:
 //
-// 1. Close the connection to server
-// 2. Send sigint to server process
-// 3. Wait the server is stopped
+//  1. Close the connection to server
+//  2. Send sigint to server process
+//  3. Wait the server is stopped
 func (r *Runner) Close() error {
 	if r.Conn != nil {
 		if err := r.Conn.Close(); err != nil {
